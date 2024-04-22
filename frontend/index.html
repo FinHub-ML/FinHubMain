@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        h1 {
+            margin: 0;
+            color: #4285f4;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav a {
+            color: #666666;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        main {
+            padding: 20px;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666666;
+            margin-bottom: 10px;
+        }
+        .link-input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .link-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            outline: none;
+        }
+        .tick-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0f9d58;
+        }
+        .article-content {
+            margin-bottom: 20px;
+        }
+        .article-content p {
+            color: #333333;
+            line-height: 1.6;
+        }
+        .positive {
+            color: #0f9d58;
+        }
+        .location {
+            color: #db4437;
+        }
+        .negative {
+            color: #f4b400;
+        }
+        footer {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            color: #666666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FinHub</h1>
+        <nav>
+            <a href="#">Projects</a>
+            <a href="#">Projects</a>
+            <a href="#">Products</a>
+            <a href="#">Products</a>
+        </nav>
+    </header>
+    <main>
+        <h2>TOO LAZY TO VIEW THE ARTICLE OR VIDEO?</h2>
+        <p>GIVE US THE LINK.</p>
+        <div class="link-input-container">
+            <input type="text" class="link-input" placeholder="https://finance.yahoo.com/1231232exampleURL">
+            <i class="fas fa-check tick-icon"></i>
+        </div>
+        <div class="article-content">
+            <p><strong>Price Cut on Full Self-Driving System:</strong> Tesla (Company) has reduced the price of its Full Self-Driving (FSD) software by one-third to $8,000.<span class="positive">(Positive)</span> This strategic in the <span class="location">US(LOC)</span> move is seen as an effort to boost adoption and customer interest ahead of the upcoming earnings release. This is an example for bad news. <span class="negative">(Negative)</span></p>
+        </div>
+    </main>
+    <footer>
+        <!-- Add any footer content here -->
+    </footer>
+</body>
+</html>
