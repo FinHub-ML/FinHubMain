@@ -55,6 +55,7 @@
             border-radius: 4px;
             font-size: 14px;
             box-sizing: border-box;
+            background-color: #f5f5f5;
         }
         .article-content {
             margin-bottom: 20px;
@@ -62,6 +63,15 @@
         .article-content p {
             color: #333333;
             line-height: 1.6;
+        }
+        .positive {
+            color: #0f9d58;
+        }
+        .location {
+            color: #db4437;
+        }
+        .negative {
+            color: #f4b400;
         }
         footer {
             background-color: #ffffff;
@@ -88,7 +98,7 @@
         <p>GIVE US THE LINK.</p>
         <input type="text" class="link-input" placeholder="https://finance.yahoo.com/1231232exampleURL">
         <div class="article-content">
-            <p><strong>Price Cut on Full Self-Driving System:</strong> Tesla (Company) has reduced the price of its Full Self-Driving (FSD) software by one-third to $8,000.(Positive) This strategic in the US(LOC) move is seen as an effort to boost adoption and customer interest ahead of the upcoming earnings release. This is an example for bad news. (Negative)</p>
+            <p><strong>Price Cut on Full Self-Driving System:</strong> Tesla (Company) has reduced the price of its Full Self-Driving (FSD) software by one-third to $8,000.<span class="positive">(Positive)</span> This strategic in the <span class="location">US(LOC)</span> move is seen as an effort to boost adoption and customer interest ahead of the upcoming earnings release. This is an example for bad news. <span class="negative">(Negative)</span></p>
         </div>
     </main>
     <footer>
