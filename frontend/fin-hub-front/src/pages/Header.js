@@ -4,7 +4,7 @@ import './Header.css';
 const Header = () => {
   return (
     <header>
-        <h1>FinHub</h1>
+        <a href = "/"> <h1>FinHub</h1></a>
         <nav>
         <a href="/">Market Sentiment</a>
         <a href="/too-lazy">Too Lazy?</a>

@@ -8,7 +8,7 @@ import Header from './pages/Header';
 const App = () => {
   return (
     <Router>
-      <div style={{padding: '50px',paddingTop: '10px'}}>
+      <div style={{}}>
 
       <Header />
       <Routes>

@@ -1,0 +1,28 @@
+.floating-keywords {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.keyword {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  animation: circularMovement linear infinite;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+@keyframes circularMovement {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(25px) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(25px) rotate(-360deg);
+  }
+}

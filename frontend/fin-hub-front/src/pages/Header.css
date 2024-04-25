@@ -1,23 +1,27 @@
 header {
     background-color: #ffffff;
     padding: 20px;
+    /* margin: 50px; */
     display: flex;
     align-items: center;
     border: 2px solid #000000;
     font-family: Arial, sans-serif;
-    padding-left: 100px;
+    padding-left: 200px;
   }
   
-  h1 {
+  header a {
+    text-decoration: none;
+  }
+  header h1 {
     margin: 0;
     color: #000000;
     font-size: 48px;
     font-weight: bold;
-    letter-spacing: -1px;
+    letter-spacing: -3px;
   }
   
   nav {
-    margin-left: 50px;
+    margin-left: 100px;
   }
   
   nav a {
@@ -28,4 +32,5 @@ header {
     font-weight: 600;
     text-transform: uppercase;
     font-family: 'Montserrat', sans-serif;
+    padding-left: 60px;
   }
