@@ -13,11 +13,14 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"),)
 ## Transcribe from English
 def transcribe(file):
     audio_file= open(file, "rb")
+    if audio_file is None:
+        return "No file found"
     transcription = client.audio.transcriptions.create(
     model="whisper-1", 
     file=audio_file
     )
     print(transcription.text)
+    return transcription.text
 
 
 ## Translation
@@ -29,5 +32,4 @@ def translate():
     )
     print(translation.text)
     
-file_path = "./sample_audio/sample1.mp3"
-transcribe(file_path)
+# file_path = "./sample_audio/sample1.mp3"
