@@ -1,18 +1,17 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-import yt_dlp
 from yt_dlp.postprocessor import FFmpegPostProcessor
 import tempfile
-
-from whisper_client.link_to_audio import download_audio
-from whisper_client.whisper import transcribe
 
 from urllib import parse
 from flask_cors import CORS
 
+from whisper_client.link_to_audio import download_audio
+from whisper_client.whisper import transcribe
 
+from sd_client.sd import generate_SD3
 load_dotenv()
 
 app = Flask(__name__)
@@ -20,8 +19,10 @@ cors = CORS(app)  # Allow all origins for all routes
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 FFmpegPostProcessor._ffmpeg_location.set('./ffmpeg')
 
-
-
+# ----------------- Whisper API / Link to Audio -----------------
+# Input: URL of video 
+# Process: Downloads audio from video -> Transcribes audio
+# Output: Transcription of audio in video
 def video_id(value):
     """
     Examples:
@@ -64,5 +65,40 @@ def transcribe_audio_route():
     else:
         return 'No URL provided', 400
 
+# ----------------- BERT -----------------
+# TODO: Implement BERT API
+
+
+
+
+
+
+# ----------------- Stable Diffusion -----------------
+# TODO: Implement Stable Diffusion API
+
+@app.route('/generate_image', methods=['POST'])
+def generate_head_image():
+    prompt = request.form.get('prompt')
+    negative_prompt = request.form.get('negative_prompt', '')
+    aspect_ratio = request.form.get('aspect_ratio', '16:9')
+    seed = int(request.form.get('seed', 0))
+    output_format = request.form.get('output_format', 'png')
+    model = request.form.get('model', 'sd3')
+
+    if prompt:
+        try:
+            generated_image_path = generate_SD3(
+                prompt,
+                negative_prompt=negative_prompt,
+                aspect_ratio=aspect_ratio,
+                seed=seed,
+                output_format=output_format,
+                model=model
+            )
+            return send_file(generated_image_path, mimetype=f'image/{output_format}')
+        except Exception as e:
+            return str(e), 500
+    else:
+        return 'No prompt provided', 400
 if __name__ == '__main__':
     app.run(debug=True)

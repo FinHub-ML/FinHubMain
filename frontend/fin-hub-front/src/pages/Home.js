@@ -3,6 +3,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { Container, TextField, Button } from '@mui/material';
 import HeadImage from '../images/p1.png';
 import FloatingKeywords from './FloatingKeywords';
+import ImageGenerator from '../components/ImageGenerator';
 
 const Home = () => {
   const [positiveCount, setPositiveCount] = useState(2);
@@ -13,7 +14,34 @@ const Home = () => {
     'TESLA new car',
     'iPhone 16',
   ]);
+  const [prompt, setPrompt] = useState('');
+  const [generatedImage, setGeneratedImage] = useState(null);
 
+
+
+   const handleGenerateImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('prompt', prompt);
+
+      const response = await fetch('http://localhost:5000/generate_image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        setGeneratedImage(imageUrl);
+      } else {
+        console.error('Error:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  
   const handleInputChange = (event, setter) => {
     const value = parseInt(event.target.value, 10);
     setter(value >= 0 ? value : 0);
@@ -51,7 +79,7 @@ const Home = () => {
         // transition: 'all 2s ease',
       }}
     >
-      <img
+      {/* <img
         src={HeadImage}
         alt="HeadImage"
         style={{
@@ -60,7 +88,32 @@ const Home = () => {
           objectFit: 'cover',
           objectPosition: 'center',
         }}
-      />
+      /> */}
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#f0f0f0',
+          position: 'relative',
+          
+          overflow: 'hidden',
+        }}
+      >
+        {generatedImage && (
+          <img
+            src={generatedImage}
+            alt="Generated Image"
+            style={{
+              height: '100%',
+              width: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
+          />
+        )}
+      </div>
       <h1
         style={{
           position: 'absolute',
@@ -76,7 +129,29 @@ const Home = () => {
       >
         Market Sentiment Today
       </h1>
-
+      <div style={{ textAlign: 'center', margin:50}}>
+          <TextField
+            label="Prompt for Image Generation"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            fullWidth
+            InputLabelProps={{
+              style: {
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: '#000',
+              },
+            }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleGenerateImage}
+            style={{ marginTop: 20 }}
+          >
+            Generate Image
+          </Button>
+        </div>
       <Container style={{ marginTop: 100 }}>
         <div style={{ textAlign: 'center' }}>
           <TextField
@@ -149,6 +224,7 @@ const Home = () => {
             }}
           />
         </div>
+        
       </Container>
     </div>
   );
