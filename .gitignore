@@ -2,5 +2,7 @@
 .venv
 ffmpeg.exe
 ffprobe.exe
-/.idea
+.idea
 
+/downloads
+/images/*

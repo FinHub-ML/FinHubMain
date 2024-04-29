@@ -10,7 +10,7 @@ const ImageGenerator = () => {
       formData.append('prompt', prompt);
       // Add other parameters here if needed
 
-      const response = await fetch('http://localhost:5000/generate_image', {
+      const response = await fetch('http://https://finhubbackend-d373ec68f9ce.herokuapp.com/generate_image', {
         method: 'POST',
         body: formData,
       });
