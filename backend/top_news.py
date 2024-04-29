@@ -7,7 +7,7 @@ import torch
 model_path = r"bert\model"
 model = BertForSequenceClassification.from_pretrained(model_path)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
+labels = {0: 'Bearish', 1: 'Bullish', 2: 'Neutral'}
 start_time = time.time()
 
 
