@@ -11,9 +11,12 @@
   position: absolute;
   transform: translate(-50%, -50%);
   animation: circularMovement linear infinite;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #000;
+  color: white ;
+  mix-blend-mode: difference;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
   opacity: 0.8;
   white-space: nowrap;
 }

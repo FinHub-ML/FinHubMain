@@ -11,8 +11,8 @@ const FloatingKeywords = ({ keywords }) => {
           style={{
             animationDelay: `${index * 0.5}s`,
             animationDuration: `${10 + index * 2}s`,
-            left: `${40 + Math.cos((index * 2 * Math.PI) / keywords.length) * 30}%`,
-            top: `${40 + Math.sin((index * 2 * Math.PI) / keywords.length) * 30}%`,
+            left: `${50 + Math.cos((index * 2 * Math.PI) / keywords.length) * 30}%`,
+            top: `${50 + Math.sin((index * 2 * Math.PI) / keywords.length) * 30}%`,
           }}
         >
           {keyword}

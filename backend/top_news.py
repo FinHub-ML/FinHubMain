@@ -48,17 +48,7 @@ news_file_path = 'news.csv'
 news_list = read_news_from_file(news_file_path)
 
 
-# return a list containing the count of each sentiment category
-def get_market_stats():
-    total_sent = [0, 0, 0]
-    # tobe initialized
-    processed_news_list = []
-    for i in range(len(processed_news_list)):
-        sent = processed_news_list[i]['sentiment']
-        for j in range(len(sent)):
-            label = sent[j]
-            total_sent[label] += 1
-    return total_sent
+
 
 
 def get_processed_news_list():
@@ -87,8 +77,17 @@ def get_processed_news_list():
         
         processed_news_list.append({'title': news['title'], 'url': news['url'], 'category': entities, 'sentences': sentences, 'sentiment_list': sentiment_list })
         
-    
-    
+    # return a list containing the count of each sentiment category
+    def get_market_stats(processed_news_list):
+        total_sent = [0, 0, 0]
+        # tobe initialized
+        
+        for i in range(len(processed_news_list)):
+            sent = processed_news_list[i]['sentiment']
+            for j in range(len(sent)):
+                label = sent[j]
+                total_sent[label] += 1
+        return total_sent
     serializable_news_list = [
         {
             'title': news['title'],

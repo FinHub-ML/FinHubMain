@@ -9,11 +9,8 @@ const Home = () => {
   const [positiveCount, setPositiveCount] = useState(2);
   const [negativeCount, setNegativeCount] = useState(2);
   const [neutralCount, setNeutralCount] = useState(3);
-  const [keywords, setKeywords] = useState([
-    'Oil price plummet',
-    'TESLA new car',
-    'iPhone 16',
-  ]);
+
+  const [keywords, setKeywords] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [generatedImage, setGeneratedImage] = useState(null);
   const [categoryNames, setCategoryNames] = useState([]);
@@ -32,6 +29,30 @@ const Home = () => {
     if (storedNewsList) {
       const uniqueCategoryNames = getUniqueCategoryNames(storedNewsList);
       setCategoryNames(uniqueCategoryNames);
+      // Set the initial keywords based on the retrieved tags
+      const initialKeywords = uniqueCategoryNames.slice(0, 9);
+      setKeywords(initialKeywords);
+
+      // Calculate the sentiment counts from the newsList
+      const sentimentCounts = storedNewsList.reduce(
+        (counts, news) => {
+          news.sentiment_list.forEach((sentiment) => {
+            if (sentiment === 0) {
+              counts.negative++;
+            } else if (sentiment === 1) {
+              counts.positive++;
+            } else if (sentiment === 2) {
+              counts.neutral++;
+            }
+          });
+          return counts;
+        },
+        { positive: 0, negative: 0, neutral: 0 }
+      );
+
+      setPositiveCount(sentimentCounts.positive);
+      setNegativeCount(sentimentCounts.negative);
+      setNeutralCount(sentimentCounts.neutral);
     }
   }, []);
 

@@ -1,5 +1,4 @@
-import React, { useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -8,24 +7,23 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Chip,
 } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const categoryColors = {
   LOC: { background: '#c8e6c9', text: '#388e3c', darkBackground: '#4caf50' },
-  ORG: { background: '#ffcdd2', text: '#c62828', darkBackground: '#d32f2f' },
+  ORG: { background: '#E7F6F2', text: '#c62828', darkBackground: '#A5C9CA' },
   PER: { background: '#e1bee7', text: '#7b1fa2', darkBackground: '#9c27b0' },
   MISC: { background: '#bbdefb', text: '#1976d2', darkBackground: '#2196f3' },
 };
 
 const sentimentColors = {
-  2: '#90caf9', // Blue
-  1: '#a5d6a7', // Green
-  0: '#ef9a9a', // Red
+  2: '#1f4260', // Blue
+  1: '#67d294', // Green
+  0: '#d50000', // Red
 };
-const getUniqueCategoryNames = (newsList) => {
-  const categoryNames = newsList.flatMap((news) => news.category.map((cat) => cat.name));
-  return [...new Set(categoryNames)];
-};
+
 
 function NewsList() {
   const [newsList, setNewsList] = useState(
@@ -33,12 +31,12 @@ function NewsList() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
     const storedNews = JSON.parse(localStorage.getItem('newsList'));
     if (storedNews) {
       setNewsList(storedNews);
-      // onCategoryNamesChange(getUniqueCategoryNames(storedNews));
     } else {
       fetchNews();
     }
@@ -67,33 +65,78 @@ function NewsList() {
         setIsLoading(false);
       }
     }
-  };
+    };
+
+  
 
   const handleTitleClick = (url) => {
     window.open(url, '_blank');
   };
 
-  return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        News List
-      </Typography>
-      <Box display="flex" justifyContent="center" mb={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={fetchNews}
-          disabled={isLoading}
-        >
-          {isLoading ? <CircularProgress size={24} /> : 'Fetch News'}
-        </Button>
-      </Box>
+  const getUniqueCategoryNames = () => {
+    const categoryNames = newsList.flatMap((news) =>
+      news.category.map((cat) => cat.name)
+    );
+    return [...new Set(categoryNames)];
+  };
+
+  const handleTagClick = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter((t) => t !== tag));
+    } else {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  const filteredNewsList = selectedTags.length > 0
+    ? newsList.filter((news) =>
+        selectedTags.every((tag) =>
+          news.category.some((cat) => cat.name === tag)
+        )
+      )
+    : newsList;
+
+
+    return (
+      <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
+      
+        <Box display="flex" justifyContent="center"  gap={5} mb={2}>
+          <Typography variant="h4" gutterBottom>
+            News List
+          </Typography>
+            <Button
+              
+              color="primary"
+              onClick={fetchNews}
+              disabled={isLoading}
+              sx = {{height: 40, width: 40, borderRadius: 20, padding: 0, margin:0 }}
+            >
+              {isLoading ? <CircularProgress size={24} /> : <RefreshIcon />
+    }
+            </Button>
+        </Box>
       {error && (
         <Typography variant="body1" color="error" gutterBottom>
           Error: {error}
         </Typography>
       )}
-      {newsList.map((news, index) => (
+      <Box display="flex" flexWrap="wrap" gap={1} mb={2} alignItems={'center'}>
+        <Typography variant="body1" fontWeight="bold">
+          Filter by Tag:
+        </Typography>
+        {getUniqueCategoryNames().map((tag) => (
+          <Chip
+            key={tag}
+            label={tag}
+            onClick={() => handleTagClick(tag)}
+            color={selectedTags.includes(tag) ? 'primary' : 'default'}
+            variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
+            sx={{ cursor: 'pointer', borderRadius: 1}}
+          />
+        ))}
+      </Box>
+      
+      {filteredNewsList.map((news, index) => (
         <Card key={index} sx={{ marginBottom: 2 }}>
           <CardHeader
             title={
@@ -113,15 +156,10 @@ function NewsList() {
                 flexWrap: 'wrap',
                 gap: 1,
                 alignItems: 'center',
+                marginBottom: 1,
               }}
             >
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                sx={{ bgcolor: 'background.paper', marginTop: 1, textAlign: 'center' }}
-              >
-                Category:
-              </Typography>
+              
               {news.category.map((cat, idx) => (
                 <Box
                   key={idx}
@@ -135,7 +173,7 @@ function NewsList() {
                     borderRadius: 1,
                   }}
                 >
-                  <Typography variant="body2" >{cat.name}</Typography>
+                  <Typography variant="body2" sx={{color: 'black'}} >{cat.name}</Typography>
                   <Box
                     sx={{
                       bgcolor: categoryColors[cat.type]?.darkBackground || 'inherit',
@@ -151,7 +189,7 @@ function NewsList() {
                 </Box>
               ))}
             </Box>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body2" gutterBottom fontSize={18} color={'black'}>
               Key Points:
             </Typography>
             <ul
@@ -172,15 +210,15 @@ function NewsList() {
                 >
                   <Box
                     sx={{
-                      width: 8,
+                      width: 7,
                       height: 8,
                       borderRadius: '50%',
                       bgcolor: sentimentColors[news.sentiment_list[sentenceIndex]],
-                      mr: 1,
+                      mr: 2,
                     }}
                   />
                   <Typography
-                    variant="body2"
+                    variant="body1"
                     sx={{
                       bgcolor:
                         sentimentColors[news.sentiment_list[sentenceIndex]],
@@ -188,6 +226,7 @@ function NewsList() {
                       px: 1,
                       py: 0.5,
                       borderRadius: 1,
+                      fontSize: 18
                     }}
                   >
                     {sentence}
