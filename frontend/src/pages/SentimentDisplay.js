@@ -9,7 +9,7 @@ const SentimentDisplay = ({ text }) => {
   useEffect(() => {
     const fetchSentiment = async () => {
       try {
-        const response = await fetch('http://localhost:5000/get_sentiment', {
+        const response = await fetch('http://https://finhubbackend-d373ec68f9ce.herokuapp.com/get_sentiment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
