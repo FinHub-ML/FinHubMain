@@ -320,63 +320,27 @@ def financial_summarizer(text):
 def financial_summarizer_sample_usage(text):
     res = summarizer(text, max_length=130, min_length=30, do_sample=False)
     summary = res[0]['summary_text']
-    tokenizer2 = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
+    tokenizer2 = AutoTokenizer.from_pretrained("dslim/bert-base-NER", use_fast=True)
     model2 = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
-    nlp = pipeline("ner", model=model2, tokenizer=tokenizer2)
-    ner_results = nlp(summary)
+    # nlp = pipeline("ner", model=model2, tokenizer=tokenizer2, aggregation_strategy='simple')
+    nlp = pipeline("ner", aggregation_strategy='simple')
+    ner_results = nlp(text)
     summary = summary.split('. ')
-    ret_result = [{'name': entry['word'], 'type': entry['entity'][2:]} for entry in ner_results]
+    print(ner_results)
+    #print(ner_results)
+    ret_result = [{'name': entry['word'], 'type': entry['entity_group']} for entry in ner_results]
+    
     return summary, ret_result
 
-def financial_summarizer_sample_usage2(text):
-    res = summarizer(text, max_length=130, min_length=30, do_sample=False)
-    summary = res[0]['summary_text']
-    tokenizer2 = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
-    model2 = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
-    nlp = pipeline("ner", model=model2, tokenizer=tokenizer2)
-    ner_results = nlp(summary)
-
-    summary = summary.split('. ')
-    ret_result = []
-    current_entity = None
-    current_entity_type = None
-
-    for entry in ner_results:
-        word = entry['word']
-        entity_type = entry['entity'][2:]  # Remove the "B-" or "I-" prefix
-
-        if entity_type == 'MISC' and word.startswith('##'):
-            word = word[2:]  # Remove the "##" prefix for miscellaneous entities
-            if current_entity is not None:
-                current_entity += word
-            else:
-                current_entity = word
-                current_entity_type = entity_type
-        elif entity_type != 'O':
-            if current_entity is not None:
-                ret_result.append({'name': current_entity, 'type': current_entity_type})
-                current_entity = None
-                current_entity_type = None
-
-            current_entity = word
-            current_entity_type = entity_type
-        else:
-            if current_entity is not None:
-                ret_result.append({'name': current_entity, 'type': current_entity_type})
-                current_entity = None
-                current_entity_type = None
-
-    if current_entity is not None:
-        ret_result.append({'name': current_entity, 'type': current_entity_type})
-
-    return summary, ret_result
 
 #test = "This morning's GDP report showed the U.S. economy growing by 1.6 percent. That's well weaker than the 2.5 percent that was expected. But with consumer spending remaining strong, what does that mean for inflationary pressures and potential rate cuts? Joining us now to discuss, former Federal Reserve Board economist Claudia Somme. Claudia, great to have you here on the program with us. You know, maybe I'm just flabbergasted trying to figure out what this print means for the Fed and how it changes the tenor of their conversation at the next meeting, if at all. The Fed's going to look at data big picture, right? So one number, particularly thinking about, oh, it was a surprise on what the markets thought. That is not, you know, enough to really move their thinking. And in particular, and you mentioned this, consumer spending looks really good under the hood, business fixed investment. So set aside those inventories, the investment business making are really good considering interest rates are a lot higher. And so that's what we think of as kind of the underlying pace. The where do we think GDP is headed? Today we got hit by imports had a bigger drag. That's a very noisy series. Inventories were a little in the play. These are not things that should change our view on the economy. It's been strong. It continues. The underlying pace continues to be strong. That's not bad for the Fed. We had a strong pace last year. Inflation came down. Frankly, the Fed thinks it can lean on a strong economy a little bit, get it some time to get comfortable with inflation. Claudia, when you take a look at this number, when you take a look at the fact that maybe PCE is going to surprise here to the upside, if we do see any sort of elevated print here tomorrow before the bell from PCE, what does that signal just in terms of what the Fed is then likely to do? How far out could we potentially be pushing that first rate cut? As Ben said, and absolutely the Fed, Jay Powell, when he's been out talking towards the end of last year, there had been some real progress last year, but it was going to be a bumpy ride. Well, we got our bumpy ride in the first quarter and the progress really slowed. There has been progress. It's just been really slow. The target index for them, the personal consumption expenditure index has looked a little better, but still it's slow. They want to build confidence. Confidence takes time. So they are pushing out, I think, where the Fed probably will start their cutting. And yet we are set up for them to cut this year and probably more than once. But you know what? They're going to be driven by the data and there's a lot of data we don't have yet. Yeah, and Claudia, that's a good point. And I want to bring up the move that we're seeing, the action that we're seeing in the yield market today, because that bump higher in yield is obviously tied to that pricing data that we're getting in this GDP print. But you say that it is likely that the Fed is still going to cut before the end of the year. What do you think then is going to, what does the Fed need to see in order to be confident to make that first cut? And when we talk about the improvement, I would guess that you're expecting then to see on the inflation front. Where do you see inflation then trending between now and year end? There is a very clear path. Given what we know now, there is a clear path for inflation to slow. And in all likelihood, we're going to see a pickup in that disinflation, maybe not as much as last year, but we're going to get moving. The Fed's target price index is within a percentage point, less than a percentage point of the 2% target. And they have told us over and over again, and it is good practice, they will not wait until 2% to cut. So we've got to see more progress to 2%. Things can't stall out. And goodness, they cannot inflation pick up. Again, the Fed is going to be driven by what it sees happening in the world. And yet we know things like the shelter prices, the owner's equivalent rent. We got more data on the rent people, like the contracts they're signing now have really come down. So it's in train. We see it, but we have gotten surprised. And there could be other surprises down the road. So I understand why markets are having a hard time getting a read on the data. And yet we should remember that the Fed doesn't wake up, look at one release and go, wow, we have to totally change our thinking. What do you think the data, especially on that housing front, needs to continue to trend towards in order for the Fed to feel confident with its cut decision when they do make that? The Fed is looking for things back to normal, which doesn't mean it has to look exactly like before the pandemic, say in terms of inflation. But if you look at the pieces of the, quote unquote, excess inflation, so like what pieces of spending are running above the inflation before the pandemic? The leader is the shelter, particularly the owner's equivalent rent. We have every reason to believe we're pointed in the right direction of that slowing. Do we know how much or how fast? No. I mean, it's coming much slower than we had expected. The other piece, I mean, there are some other pieces of services and some of it's pretty eclectic and echoes of COVID. I mean, in the Consumer Price Index, motor vehicle insurance is another big excess. That isn't as much in the PCE, but it just shows we've got we have far fewer enemies in the fight on inflation than we did in 2022. And yet they are still here. And some of them are going to be tough. Claudia Assam, we really appreciate your insight, especially on a day like today. Thanks so much for hopping on early with us here on Yahoo Finance. Claudia Assam, Assam Consulting founder. Thank you."
 # print(financial_summarizer(test))
+
+
 
 t = """
 
 Equities in Australia and South Korea rose at the open, while the Japanese stock market is shut for a holiday. US contracts nudged higher after the S&P 500 rose 1% on Friday. Yen traders remain alert to efforts to support the currency that’s at its weakest in more than three decades. Australian bond yields fell, following US Treasuries on Friday. Chinese shares will be closely watched after industrial companies’ profits slumped in March as exports flagged and deflationary pressures persisted. The weakness in the latest data “casts doubts on whether the economic recovery seen early this year can be sustained,” Commerzbank strategists including Charlie Lay wrote in a note to clients. “It is important now that the government will follow through with their fiscal stimulus plan outlined in the National People’s Congress annual meeting back in March.” Asian technology stocks may move in early trading after earnings from Microsoft Corp. and Google’s parent Alphabet Inc. last week sent a clear message that spending on artificial intelligence and cloud computing is paying off. The rally in tech shares has helped trim the drop in global stocks this month to 2.7%, the first monthly loss since October, amid concerns over lingering inflation pressures and conflict in the Middle East. While the correction could be over, “there is a significant risk that it’s just a bounce from oversold conditions,” said Shane Oliver, chief economist and head of investment strategy at AMP Ltd. Still, any further selloff is unlikely to be deep and stocks will see more gains “as disinflation resumes, central banks ultimately cut interest rates and recession is avoided or proves mild,” he wrote in a note to clients. Traders will also be focusing on the Fed’s policy meeting on Wednesday after the central bank’s preferred measure of inflation rose at a brisk pace in March, though roughly in line with estimates. With officials likely to hold rates steady at a more than two-decade high, much of the focus will be on any pivot in the tone of the post-meeting statement and Chair Jerome Powell’s press conference. “With all measures of US consumer prices showing a steep acceleration over the past three to four months, the FOMC is bound to row back hard from its earlier predictions of meaningful policy easing this year,” Societe Generale economists including Klaus Baader wrote in a note to clients. “That said, markets have already scaled back pricing of rate cuts drastically, so unless Chair Powell plays up the possibility of rate hikes, the market damage is likely to be modest.” A gauge of US Treasury returns has slumped 2.3% this month, set for the biggest monthly drop since February last year, as hawkish Fedspeak and strong economic data pushed back rate-cut bets. Swaps traders now see only one Fed reduction for all of 2024, well below the roughly six quarter-point cuts they expected at the start of 2024.
 """
 
-#print(financial_summarizer_sample_usage(t))
+#print(financial_summarizer_sample_usage("Elon Musk is doing great. Coca-Cola is doing bad. Tesla price is up."))

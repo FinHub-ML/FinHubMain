@@ -1,5 +1,5 @@
 import time
-from bart.bart import financial_summarizer, financial_summarizer_sample_usage, financial_summarizer_sample_usage2
+from bart.bart import financial_summarizer, financial_summarizer_sample_usage
 import csv
 import random
 from transformers import BertTokenizer, BertForSequenceClassification, TrainingArguments
@@ -73,8 +73,7 @@ def get_processed_news_list():
         ## bart summarize -> output summary and entities
         # summarized_text, entities = financial_summarizer_placeholder(news['content'])
         summarized_text, entities = financial_summarizer_sample_usage(news['content'])
-        print(summarized_text)
-        print(entities)
+
         ## entity add to category 
         #for ent in entities:
         #    categories[ent] =  1 + categories.get(ent, 0) 
