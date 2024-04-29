@@ -14,6 +14,9 @@ from whisper_client.whisper import transcribe
 from sd_client.sd import generate_SD3
 
 from bart.bart import financial_summarizer
+
+from top_news import get_processed_news_list
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -93,6 +96,11 @@ def summarize_text():
 # TODO: Implement BERT API
 
 
+
+@app.route('/news', methods=['GET'])
+def get_news():
+    news_list = get_processed_news_list()
+    return jsonify(news_list)
 
 
 

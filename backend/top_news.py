@@ -47,7 +47,7 @@ def financial_summarizer_placeholder(text):
 news_file_path = 'sample_news.csv'
 news_list = read_news_from_file(news_file_path)
 
-def get_top_news(news_list):
+def get_processed_news_list():
     
     categories = dict() # categories = { 'China': 10, 'BYD': 5, 'EV': 3, ...}
 
@@ -82,7 +82,19 @@ def get_top_news(news_list):
         print(n)
 
     print("--- %s seconds ---" % (time.time() - start_time))
+    
+    serializable_news_list = [
+        {
+            'title': news['title'],
+            'url': news['url'],
+            'category': news['category'],
+            'sentences': news['sentences'],
+            'sentiment_list': news['sentiment_list']
+        }
+        for news in processed_news_list
+    ]
 
+    return serializable_news_list
 
 ### category implementation: DB/ dict? 
 #### dict = { URL: {'title': 'Sample News Title', 'category':['China', 'BYD', 'EV'], 'summary' : ['sentence1', 'sentence2'], 'sentiment': [1,0]}, ... }
