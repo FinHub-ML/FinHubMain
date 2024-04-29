@@ -13,9 +13,9 @@ from whisper_client.whisper import transcribe
 
 from sd_client.sd import generate_SD3
 
-from bart.bart import financial_summarizer
+from bart.bart import financial_summarizer, financial_summarizer_sample_usage
 
-from top_news import get_processed_news_list
+from top_news import get_processed_news_list, bert_get_sentiment
 
 load_dotenv()
 
@@ -77,7 +77,7 @@ def summarize_text():
     text = request.json.get('text')  # Expect JSON data in the request body
     if text:
         try:
-            key_points, entities = financial_summarizer(text)
+            key_points, entities = financial_summarizer_sample_usage(text)
             response = {
                 'key_points': key_points,
                 'entities': entities
@@ -102,12 +102,44 @@ def get_news():
     news_list = get_processed_news_list()
     return jsonify(news_list)
 
-
+@app.route('/get_sentiment', methods=['POST'])
+def get_sentiment():
+    text = request.json.get('text')
+    if text:
+        try:
+            sentiment = bert_get_sentiment(text)
+            return jsonify(sentiment), 200
+        except Exception as e:
+            return str(e), 500
+    else:
+        return 'No text provided', 400
 
 
 # ----------------- Stable Diffusion -----------------
 # TODO: Implement Stable Diffusion API
-
+@app.route('/latest_image', methods=['GET'])
+def get_latest_image():
+    try:
+        # Get the list of generated images from the 'images' folder
+        image_files = os.listdir('images')
+        
+        if image_files:
+            # Sort the image files based on their modification time (latest first)
+            image_files.sort(key=lambda x: os.path.getmtime(os.path.join('images', x)), reverse=True)
+            
+            # Get the filename of the latest generated image
+            latest_image = image_files[0]
+            
+            # Construct the path to the latest image file
+            image_path = os.path.join('images', latest_image)
+            
+            return send_file(image_path, mimetype=f'image/{latest_image.split(".")[-1]}')
+        else:
+            return 'No generated images found', 404
+    except Exception as e:
+        return str(e), 500
+    
+    
 @app.route('/generate_image', methods=['POST'])
 def generate_head_image():
     prompt = request.form.get('prompt')

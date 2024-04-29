@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Typography,
@@ -21,27 +22,50 @@ const sentimentColors = {
   1: '#a5d6a7', // Green
   0: '#ef9a9a', // Red
 };
+const getUniqueCategoryNames = (newsList) => {
+  const categoryNames = newsList.flatMap((news) => news.category.map((cat) => cat.name));
+  return [...new Set(categoryNames)];
+};
 
 function NewsList() {
-  const [newsList, setNewsList] = useState([]);
+  const [newsList, setNewsList] = useState(
+    JSON.parse(localStorage.getItem('newsList')) || []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchNews = async () => {
-    setIsLoading(true);
-    setError(null);
+  useEffect(() => {
+    const storedNews = JSON.parse(localStorage.getItem('newsList'));
+    if (storedNews) {
+      setNewsList(storedNews);
+      // onCategoryNamesChange(getUniqueCategoryNames(storedNews));
+    } else {
+      fetchNews();
+    }
+  }, []);
 
-    try {
-      const response = await fetch('http://localhost:5000/news');
-      if (!response.ok) {
-        throw new Error('Failed to fetch news data');
+  const fetchNews = async () => {
+    const storedNews = JSON.parse(localStorage.getItem('newsList'));
+    if (storedNews) {
+      setNewsList(storedNews);
+    } else {
+      setIsLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch('http://localhost:5000/news');
+        if (!response.ok) {
+          throw new Error('Failed to fetch news data');
+        }
+        const data = await response.json();
+        setNewsList(data);
+        localStorage.setItem('newsList', JSON.stringify(data));
+        // onCategoryNamesChange(getUniqueCategoryNames(data));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-      const data = await response.json();
-      setNewsList(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -177,5 +201,7 @@ function NewsList() {
     </Box>
   );
 }
-
+// NewsList.propTypes = {
+//   onCategoryNamesChange: PropTypes.func.isRequired,
+// };
 export default NewsList;

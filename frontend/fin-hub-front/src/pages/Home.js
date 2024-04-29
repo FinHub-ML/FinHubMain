@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { Container, TextField, Button } from '@mui/material';
+import { Container, TextField, Button, CircularProgress, Box } from '@mui/material';
 import HeadImage from '../images/p1.png';
 import FloatingKeywords from './FloatingKeywords';
 import ImageGenerator from '../components/ImageGenerator';
@@ -16,31 +16,94 @@ const Home = () => {
   ]);
   const [prompt, setPrompt] = useState('');
   const [generatedImage, setGeneratedImage] = useState(null);
+  const [categoryNames, setCategoryNames] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [isGenerating, setisGenerating] = useState(false);
+  const getUniqueCategoryNames = (newsList) => {
+    const categoryNames = newsList.flatMap((news) =>
+      news.category.map((category) => category.name)
+    );
+    return [...new Set(categoryNames)];
+  };
 
+ 
+  useEffect(() => {
+    const storedNewsList = JSON.parse(localStorage.getItem('newsList'));
+    if (storedNewsList) {
+      const uniqueCategoryNames = getUniqueCategoryNames(storedNewsList);
+      setCategoryNames(uniqueCategoryNames);
+    }
+  }, []);
 
+  const handleCategoryClick = (categoryName) => {
+    setSelectedCategories((prevSelectedCategories) => {
+      const index = prevSelectedCategories.indexOf(categoryName);
+      if (index > -1) {
+        return prevSelectedCategories.filter((_, i) => i !== index);
+      } else {
+        return [...prevSelectedCategories, categoryName];
+      }
+    });
+  };
+  const handleClearCategories = () => {
+    setSelectedCategories([]);
+  };
+  useEffect(() => {
+    const promptPrefix = 'A headline image that summarizes the following news topics: ';
+    const selectedCategoriesString = selectedCategories.join(', ');
+    const fullPrompt = `${promptPrefix}${selectedCategoriesString}`;
+    setPrompt(fullPrompt);
+  }, [selectedCategories]);
 
-   const handleGenerateImage = async () => {
+  useEffect(() => {
+    const fetchLatestImage = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/latest_image');
+        
+        if (response.ok) {
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          setGeneratedImage(imageUrl);
+        } else {
+          console.error('Error:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    
+    fetchLatestImage();
+  }, []);
+  const handleGenerateImage = async () => {
+    setisGenerating(true);
     try {
       const formData = new FormData();
       formData.append('prompt', prompt);
-
+  
       const response = await fetch('http://localhost:5000/generate_image', {
         method: 'POST',
         body: formData,
       });
-
+  
       if (response.ok) {
         const blob = await response.blob();
+        const timestamp = Date.now(); // Generate a unique timestamp
+        const imagePath = `generated_image_${timestamp}.jpg`; // Create a unique filename
         const imageUrl = URL.createObjectURL(blob);
+  
+
+  
         setGeneratedImage(imageUrl);
+        localStorage.setItem('generatedImageUrl', imageUrl); // Store the image URL in localStorage
       } else {
         console.error('Error:', await response.text());
       }
     } catch (error) {
       console.error('Error:', error);
+    }finally {
+      setisGenerating(false);
     }
   };
-
   
   const handleInputChange = (event, setter) => {
     const value = parseInt(event.target.value, 10);
@@ -101,18 +164,18 @@ const Home = () => {
           overflow: 'hidden',
         }}
       >
-        {generatedImage && (
-          <img
-            src={generatedImage}
-            alt="Generated Image"
-            style={{
-              height: '100%',
-              width: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-            }}
-          />
-        )}
+       {generatedImage && (
+        <img
+          src={generatedImage}
+          alt="Generated Image"
+          style={{
+            height: '100%',
+            width: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+          }}
+        />
+      )}
       </div>
       <h1
         style={{
@@ -130,27 +193,72 @@ const Home = () => {
         Market Sentiment Today
       </h1>
       <div style={{ textAlign: 'center', margin:50}}>
-          <TextField
-            label="Prompt for Image Generation"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            fullWidth
-            InputLabelProps={{
-              style: {
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                color: '#000',
-              },
+      <Box display="flex" alignItems="stretch"  gap={2}>
+        <TextField
+          label="Prompt for Image Generation"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          fullWidth
+          InputLabelProps={{
+            style: {
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              color: '#000',
+            },
+          }}
+          style={{ flexGrow: 1 }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGenerateImage}
+          disabled={isGenerating}
+          style={{ minWidth: 300, borderRadius: '4px', flexGrow: 1}}
+        >
+          {isGenerating ? (
+            <>
+              <CircularProgress size={24} style={{marginRight:8}} />
+              Generating...
+            </>
+          ) : (
+            'Generate'
+          )}
+        </Button>
+
+
+      </Box>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px', marginTop: '16px' }}>
+        {categoryNames.map((categoryName) => (
+          <div
+            className='Monterrat'
+            key={categoryName}
+            onClick={() => handleCategoryClick(categoryName)}
+            style={{
+              backgroundColor: selectedCategories.includes(categoryName) ? 'lightgray' : 'white',
+              border: '1px solid gray',
+              borderRadius: '2px',
+              padding: '4px 8px',   
+              cursor: 'pointer',
             }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGenerateImage}
-            style={{ marginTop: 20 }}
           >
-            Generate Image
+            {categoryName}
+          </div>
+        ))}
+        {selectedCategories.length > 0 && (
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleClearCategories}
+            style={{ marginLeft: '8px' }}
+          >
+            Clear
           </Button>
+          
+        )}
+        
+      </div>
+          
         </div>
       <Container style={{ marginTop: 100 }}>
         <div style={{ textAlign: 'center' }}>
