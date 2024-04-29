@@ -47,6 +47,19 @@ def financial_summarizer_placeholder(text):
 news_file_path = 'sample_news.csv'
 news_list = read_news_from_file(news_file_path)
 
+#return a list containing the total
+def get_market_stats():
+    total_sent = [0, 0, 0]
+    processed_news_list = []
+    for i in range(len(processed_news_list)):
+        sent = processed_news_list[i]['sentiment']
+        for j in range(len(sent)):
+            label = sent[j]
+            total_sent[label] += 1
+    total_count = sum(total_sent)
+    percentages = [(x / total_count) * 100 for x in total_sent]
+    return percentages
+
 def get_processed_news_list():
     
     categories = dict() # categories = { 'China': 10, 'BYD': 5, 'EV': 3, ...}
