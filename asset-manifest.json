@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/FinHubMain/static/css/main.4b16614f.css",
+    "main.js": "/FinHubMain/static/js/main.e71c920f.js",
+    "static/js/453.3f852578.chunk.js": "/FinHubMain/static/js/453.3f852578.chunk.js",
+    "static/media/p1.png": "/FinHubMain/static/media/p1.5cad4a34a7e444e44a3a.png",
+    "index.html": "/FinHubMain/index.html",
+    "main.4b16614f.css.map": "/FinHubMain/static/css/main.4b16614f.css.map",
+    "main.e71c920f.js.map": "/FinHubMain/static/js/main.e71c920f.js.map",
+    "453.3f852578.chunk.js.map": "/FinHubMain/static/js/453.3f852578.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4b16614f.css",
+    "static/js/main.e71c920f.js"
+  ]
+}
