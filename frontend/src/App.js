@@ -5,19 +5,18 @@ import TooLazy from './pages/TooLazy';
 import TopNews from './pages/TopNews';
 import Footer from './pages/Footer';
 import Header from './pages/Header';
+
 const App = () => {
   return (
-    <Router>
-      <div style={{}}>
-
-      <Header />
-      <Routes>
+    <Router basename={process.env.PUBLIC_URL}>
+      <div>
+        <Header />
+        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/too-lazy" element={<TooLazy />} />
           <Route path="/top-news" element={<TopNews />} />
-      </Routes>
-      <Footer/>
-
+        </Routes>
+        <Footer />
       </div>
     </Router>
   );
