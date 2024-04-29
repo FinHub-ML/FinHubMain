@@ -306,6 +306,7 @@ def financial_summarizer(text):
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     query = f"Summarize the key points involving {', '.join([f'{name} ({entity_type})' for name, entity_type in entity_names_types])}."
+    print("query", query)
     inputs = tokenizer.encode(query + ": " + preprocessed_text, return_tensors="pt", max_length=1024, truncation=True)
     input_length = len(inputs[0])
 
