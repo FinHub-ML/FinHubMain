@@ -44,7 +44,7 @@ def bert_get_sentiment(input_text):
 def financial_summarizer_placeholder(text):
     return ['This is a placeholder summary'], ['China', 'BYD', 'EV']
 
-news_file_path = 'sample_news.csv'
+news_file_path = 'news.csv'
 news_list = read_news_from_file(news_file_path)
 
 
