@@ -2,8 +2,17 @@ import time
 from bart.bart import financial_summarizer
 import csv
 import random
+from transformers import BertTokenizer, BertForSequenceClassification, TrainingArguments
+import torch
+model_path = r"bert\model"
+model = BertForSequenceClassification.from_pretrained(model_path)
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 start_time = time.time()
+
+
+def tokenizer_function(input_text):
+    return tokenizer(input_text, max_length=128, padding="max_length", truncation=True)
 
 
 # input news from local file 
@@ -19,10 +28,17 @@ def read_news_from_file(file_path):
     return news_list
 
 
-
 ## bert -> output sentiment analysis 
-def bert_get_sentiment(sentence):
-    return random.choice([1, 0, -1])
+def bert_get_sentiment(input_text):
+    input_token = tokenizer_function(input_text)
+    input_ids = torch.tensor(input_token['input_ids']).unsqueeze(0)
+    attention_mask = torch.tensor(input_token['attention_mask']).unsqueeze(0)
+    model.eval()
+    with torch.no_grad():
+        outputs = model(input_ids, attention_mask=attention_mask)
+        logits = outputs.logits
+        predicted_label = torch.argmax(logits, dim=1).item()
+    return predicted_label
 
 
 def financial_summarizer_placeholder(text):
