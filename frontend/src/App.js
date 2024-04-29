@@ -7,8 +7,10 @@ import Footer from './pages/Footer';
 import Header from './pages/Header';
 
 const App = () => {
+  const basename = process.env.NODE_ENV === 'production' ? '/FinHubMain' : '';
+
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename={basename}>
       <div>
         <Header />
         <Routes>

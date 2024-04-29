@@ -20,7 +20,8 @@ from top_news import get_processed_news_list, bert_get_sentiment
 load_dotenv()
 
 app = Flask(__name__)
-cors = CORS(app)  # Allow all origins for all routes
+CORS(app, resources={r"/*": {"origins": "https://finhub-ml.github.io"}})
+# cors = CORS(app)  # Allow all origins for all routes
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 FFmpegPostProcessor._ffmpeg_location.set('./ffmpeg')
 
