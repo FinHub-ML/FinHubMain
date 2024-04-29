@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
@@ -12,6 +12,8 @@ from whisper_client.link_to_audio import download_audio
 from whisper_client.whisper import transcribe
 
 from sd_client.sd import generate_SD3
+
+from bart.bart import financial_summarizer
 load_dotenv()
 
 app = Flask(__name__)
@@ -64,6 +66,28 @@ def transcribe_audio_route():
             return f'Error occurred: {str(e)}', 500
     else:
         return 'No URL provided', 400
+
+
+# ----------------- BART -----------------
+@app.route('/summarize', methods=['POST'])
+def summarize_text():
+    text = request.json.get('text')  # Expect JSON data in the request body
+    if text:
+        try:
+            key_points, entities = financial_summarizer(text)
+            response = {
+                'key_points': key_points,
+                'entities': entities
+            }
+            print(response)
+            return jsonify(response), 200
+        except Exception as e:
+            return str(e), 500
+    else:
+        return 'No text provided', 400
+
+
+
 
 # ----------------- BERT -----------------
 # TODO: Implement BERT API
