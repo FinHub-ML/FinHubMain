@@ -34,7 +34,14 @@ function NewsList() {
         <div key={index}>
           <h2>{news.title}</h2>
           <p>URL: {news.url}</p>
-          <p>Category: {news.category.join(', ')}</p>
+          <p>
+            Category:{' '}
+            {news.category.map((cat, idx) => (
+              <span key={idx}>
+                {cat.name} ({cat.type}){' '}
+              </span>
+            ))}
+          </p>
           <p>Sentences:</p>
           <ul>
             {news.sentences.map((sentence, sentenceIndex) => (

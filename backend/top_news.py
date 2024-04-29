@@ -1,5 +1,5 @@
 import time
-from bart.bart import financial_summarizer
+from bart.bart import financial_summarizer, financial_summarizer_sample_usage, financial_summarizer_sample_usage2
 import csv
 import random
 from transformers import BertTokenizer, BertForSequenceClassification, TrainingArguments
@@ -58,30 +58,23 @@ def get_processed_news_list():
         
         ## bart summarize -> output summary and entities
         # summarized_text, entities = financial_summarizer_placeholder(news['content'])
-        summarized_text, entities = financial_summarizer(news['content'])
+        summarized_text, entities = financial_summarizer_sample_usage(news['content'])
+        print(summarized_text)
+        print(entities)
         ## entity add to category 
-        for ent in entities:
-            categories[ent] =  1 + categories.get(ent, 0) 
+        #for ent in entities:
+        #    categories[ent] =  1 + categories.get(ent, 0) 
 
         
         sentiment_list = []
         ## bert sentiment analysis
-        for sentence in summarized_text:
+        sentences = summarized_text
+        for sentence in sentences:
             sentiment_list.append(bert_get_sentiment(sentence))
         
-        processed_news_list.append({'title': news['title'], 'url': news['url'], 'category': entities, 'sentences': summarized_text, 'sentiment_list': sentiment_list })
+        processed_news_list.append({'title': news['title'], 'url': news['url'], 'category': entities, 'sentences': sentences, 'sentiment_list': sentiment_list })
         
-        
-        
-    print(categories)
-
-    cnt = 0 
-    for n in processed_news_list:
-        print("\n\n" , cnt )
-        cnt += 1
-        print(n)
-
-    print("--- %s seconds ---" % (time.time() - start_time))
+    
     
     serializable_news_list = [
         {
@@ -99,6 +92,7 @@ def get_processed_news_list():
 ### category implementation: DB/ dict? 
 #### dict = { URL: {'title': 'Sample News Title', 'category':['China', 'BYD', 'EV'], 'summary' : ['sentence1', 'sentence2'], 'sentiment': [1,0]}, ... }
 
+# print(get_processed_news_list())
 
 
 
