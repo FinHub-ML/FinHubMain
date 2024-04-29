@@ -29,7 +29,7 @@ const TooLazy = () => {
     setSummary({ keyPoints: [], entities: [] });
 
     try {
-      const response = await fetch(`http://localhost:5000/transcribe_audio?url=${encodeURIComponent(url)}`);
+      const response = await fetch(`https://finhubbackend-d373ec68f9ce.herokuapp.com/transcribe_audio?url=${encodeURIComponent(url)}`);
       if (response.ok) {
         const transcription = await response.text();
         setTranscription(transcription);
@@ -48,7 +48,7 @@ const TooLazy = () => {
   const fetchSummary = async (transcription) => {
     setIsSummarizingLoading(true);
     try {
-      const summaryResponse = await fetch('http://localhost:5000/summarize', {
+      const summaryResponse = await fetch('https://finhubbackend-d373ec68f9ce.herokuapp.com/summarize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

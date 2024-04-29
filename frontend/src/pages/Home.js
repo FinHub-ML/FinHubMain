@@ -79,7 +79,7 @@ const Home = () => {
   useEffect(() => {
     const fetchLatestImage = async () => {
       try {
-        const response = await fetch('http://localhost:5000/latest_image');
+        const response = await fetch('http://https://finhubbackend-d373ec68f9ce.herokuapp.com/latest_image');
         
         if (response.ok) {
           const blob = await response.blob();
@@ -101,7 +101,7 @@ const Home = () => {
       const formData = new FormData();
       formData.append('prompt', prompt);
   
-      const response = await fetch('http://localhost:5000/generate_image', {
+      const response = await fetch('https://finhubbackend-d373ec68f9ce.herokuapp.com/generate_image', {
         method: 'POST',
         body: formData,
       });

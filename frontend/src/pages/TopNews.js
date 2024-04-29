@@ -51,7 +51,7 @@ function NewsList() {
       setError(null);
   
       try {
-        const response = await fetch('http://localhost:5000/news');
+        const response = await fetch('https://finhubbackend-d373ec68f9ce.herokuapp.com/news');
         if (!response.ok) {
           throw new Error('Failed to fetch news data');
         }
