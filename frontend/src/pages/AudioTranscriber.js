@@ -5,7 +5,7 @@ const AudioTranscriber = () => {
 
   const handleTranscribe = async (url) => {
     try {
-      const response = await fetch(`https://finhubbackend-d373ec68f9ce.herokuapp.com/transcribe_audio?url=${encodeURIComponent(url)}`);
+      const response = await fetch(`http://127.0.0.1:5000/transcribe_audio?url=${encodeURIComponent(url)}`);
       if (response.ok) {
         const transcription = await response.text();
         console.log(response.text);
