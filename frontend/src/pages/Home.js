@@ -79,7 +79,7 @@ const Home = () => {
   useEffect(() => {
     const fetchLatestImage = async () => {
       try {
-        const response = await fetch('http://https://finhubbackend-d373ec68f9ce.herokuapp.com/latest_image');
+        const response = await fetch('https://finhubbackend-d373ec68f9ce.herokuapp.com/latest_image');
         
         if (response.ok) {
           const blob = await response.blob();
