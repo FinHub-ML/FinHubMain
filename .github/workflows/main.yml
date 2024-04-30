@@ -18,4 +18,3 @@ jobs:
           STABILITY_KEY: ${{secrets.STABILITY_KEY}}
         run: |
           git subtree push --prefix backend https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
-        working-directory: ./backend
