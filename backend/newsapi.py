@@ -18,7 +18,7 @@ with open('news.csv', mode='w', newline='', encoding='utf-8') as file:
                     categories = True)
             )):
         title = art.get('title', '')
-        body = art.get('body', '').replace('\n', ' ').replace('\r', ' ')
+        body = art.get('body', '').replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
         url = art.get('url', '')
         writer.writerow([title, url, body])
 
