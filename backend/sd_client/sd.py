@@ -75,7 +75,7 @@ def generate_SD3(prompt, negative_prompt="", aspect_ratio="16:9", seed=0, output
 
     host = f"https://api.stability.ai/v2beta/stable-image/generate/sd3"
     prompt = prompt+  "(high quality photography), realism, Canon EOS R3, by Doug Aitken,scene, professional,highly detailed, (sharp focus), (finance), (business figure:0.8), (logo), company "
-    negative_prompt = "Cartoonish.fantasy. Ugly.  Disfigured, deformed,  Overwhelming texts.  Cluttered. Low-resolution, blurry, pixelated, unrealistic lighting, (fantasy), (sci-fi), (horror), (anime), (manga), (cartoon), (furry), (furry art), (furry fandom), (furry community), (furry culture), (furry subculture), (furry sub-culture), (furry sub culture), (furry sub-culture), (furry subculture), (furry fandom), (furry art), (furry), (cartoonish), (cartoon), (anime), (manga), (horror), (sci-fi), (fantasy), (low-resolution), (blurry), (pixelated), (unrealistic lighting), (overwhelming texts), (disfigured), (deformed), (ugly)"
+    negative_prompt = "fantasy, Disfigured, deformed,  Cluttered, Low-resolution, blurry, pixelated, unrealistic lighting, (fantasy), (sci-fi), (horror),  (cartoon), (cartoonish), (cartoon), (anime), (manga), (horror), (sci-fi), (fantasy), (low-resolution), (blurry), (pixelated), (unrealistic lighting), (overwhelming texts), (disfigured), (deformed), (ugly)"
     params = {
         "prompt" : prompt,
         "negative_prompt" : negative_prompt if model=="sd3" else "",
