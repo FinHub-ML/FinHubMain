@@ -22,7 +22,7 @@ def read_news_from_file(file_path):
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            title, url, content = row[0].split('\t')
+            title, url, content = row[0], row[1], row[2]
 
             news_list.append({'title': title, 'url': url, 'content': content})
     return news_list
