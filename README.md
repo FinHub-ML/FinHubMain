@@ -2,10 +2,15 @@
 
 ## Backend 
 ### 1. Create Venv, install requirements, and activate
+
 .venv\Scripts\activate
+
 cd backend
+
 pip install -r requirements.txt
+
 .venv\Scripts\activate
+
 ### 2. Create .env file, set environment key 
 OPENAI_API_KEY = paste-my-key-here
 
