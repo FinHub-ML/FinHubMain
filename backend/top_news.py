@@ -23,7 +23,7 @@ def read_news_from_file(file_path):
         reader = csv.reader(file)
         for row in reader:
             title, url, content = row[0], row[1], row[2]
-
+            print("[DEBUG] HERE ARE THE TITLE URL CONTENT IN THE BACKEND ",title, url)
             news_list.append({'title': title, 'url': url, 'content': content})
     return news_list
 
@@ -62,7 +62,7 @@ def get_processed_news_list():
         
         ## bart summarize -> output summary and entities
         # summarized_text, entities = financial_summarizer_placeholder(news['content'])
-        summarized_text, entities = financial_summarizer_sample_usage(news['content'])
+        summarized_text, entities = financial_summarizer_sample_usage(news['content'][:3000])
 
         ## entity add to category 
         #for ent in entities:

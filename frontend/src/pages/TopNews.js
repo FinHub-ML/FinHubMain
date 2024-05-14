@@ -24,11 +24,8 @@ const sentimentColors = {
   0: '#d50000', // Red
 };
 
-
 function NewsList() {
-  const [newsList, setNewsList] = useState(
-    JSON.parse(localStorage.getItem('newsList')) || []
-  );
+  const [newsList, setNewsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -38,7 +35,7 @@ function NewsList() {
     if (storedNews) {
       setNewsList(storedNews);
     } else {
-      console.log("Fetching news")
+      console.log("Fetching news");
       fetchNews();
     }
   }, []);
@@ -47,11 +44,11 @@ function NewsList() {
     const storedNews = JSON.parse(localStorage.getItem('newsList'));
     if (storedNews) {
       setNewsList(storedNews);
-      console.log("Already have stored news")
+      console.log("Already have stored news");
     } else {
       setIsLoading(true);
       setError(null);
-  
+
       try {
         const response = await fetch('http://127.0.0.1:5000/news');
         if (!response.ok) {
@@ -61,27 +58,30 @@ function NewsList() {
         console.log(data);
         setNewsList(data);
         localStorage.setItem('newsList', JSON.stringify(data));
-        // onCategoryNamesChange(getUniqueCategoryNames(data));
       } catch (error) {
         setError(error.message);
       } finally {
         setIsLoading(false);
       }
     }
-    };
+  };
+
   const handleRefreshClick = async () => {
     localStorage.removeItem('newsList');
-    fetchNews();
-  }
-  
+    await fetchNews();
+  };
 
   const handleTitleClick = (url) => {
     window.open(url, '_blank');
   };
 
   const getUniqueCategoryNames = () => {
+    if (!newsList) {
+      return [];
+    }
+
     const categoryNames = newsList.flatMap((news) =>
-      news.category.map((cat) => cat.name)
+      news.category ? news.category.map((cat) => cat.name) : []
     );
     return [...new Set(categoryNames)];
   };
@@ -97,30 +97,27 @@ function NewsList() {
   const filteredNewsList = selectedTags.length > 0
     ? newsList.filter((news) =>
         selectedTags.every((tag) =>
+          news.category &&
           news.category.some((cat) => cat.name === tag)
         )
       )
     : newsList;
 
-
-    return (
-      <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      
-        <Box display="flex" justifyContent="center"  gap={5} mb={2}>
-          <Typography variant="h4" gutterBottom>
-            News List
-          </Typography>
-            <Button
-              
-              color="primary"
-              onClick={handleRefreshClick}
-              disabled={isLoading}
-              sx = {{height: 40, width: 40, borderRadius: 20, padding: 0, margin:0 }}
-            >
-              {isLoading ? <CircularProgress size={24} /> : <RefreshIcon />
-    }
-            </Button>
-        </Box>
+  return (
+    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
+      <Box display="flex" justifyContent="center" gap={5} mb={2}>
+        <Typography variant="h4" gutterBottom>
+          News List
+        </Typography>
+        <Button
+          color="primary"
+          onClick={handleRefreshClick}
+          disabled={isLoading}
+          sx={{ height: 40, width: 40, borderRadius: 20, padding: 0, margin: 0 }}
+        >
+          {isLoading ? <CircularProgress size={24} /> : <RefreshIcon />}
+        </Button>
+      </Box>
       {error && (
         <Typography variant="body1" color="error" gutterBottom>
           Error: {error}
@@ -137,11 +134,11 @@ function NewsList() {
             onClick={() => handleTagClick(tag)}
             color={selectedTags.includes(tag) ? 'primary' : 'default'}
             variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
-            sx={{ cursor: 'pointer', borderRadius: 1}}
+            sx={{ cursor: 'pointer', borderRadius: 1 }}
           />
         ))}
       </Box>
-      
+
       {filteredNewsList.map((news, index) => (
         <Card key={index} sx={{ marginBottom: 2 }}>
           <CardHeader
@@ -165,35 +162,39 @@ function NewsList() {
                 marginBottom: 1,
               }}
             >
-              
-              {news.category.map((cat, idx) => (
-                <Box
-                  key={idx}
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    bgcolor: categoryColors[cat.type]?.background || 'inherit',
-                    color: 'categoryColors[cat.type]?.text' || 'inherit',
-                    px: 1,
-                    py: 0.5,
-                    borderRadius: 1,
-                  }}
-                >
-                  <Typography variant="body2" sx={{color: 'black'}} >{cat.name}</Typography>
+              {news.category &&
+                news.category.map((cat, idx) => (
                   <Box
+                    key={idx}
                     sx={{
-                      bgcolor: categoryColors[cat.type]?.darkBackground || 'inherit',
-                      color: 'white', // Set the text color to white
-                      px: 0.5,
-                      py: 0.25,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      bgcolor: categoryColors[cat.type]?.background || 'inherit',
+                      color: 'categoryColors[cat.type]?.text' || 'inherit',
+                      px: 1,
+                      py: 0.5,
                       borderRadius: 1,
-                      ml: 0.5,
                     }}
                   >
-                    <Typography variant="body2" sx={{color: 'white'}}>{cat.type}</Typography>
+                    <Typography variant="body2" sx={{ color: 'black' }}>
+                      {cat.name}
+                    </Typography>
+                    <Box
+                      sx={{
+                        bgcolor: categoryColors[cat.type]?.darkBackground || 'inherit',
+                        color: 'white',
+                        px: 0.5,
+                        py: 0.25,
+                        borderRadius: 1,
+                        ml: 0.5,
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ color: 'white' }}>
+                        {cat.type}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                ))}
             </Box>
             <Typography variant="body2" gutterBottom fontSize={18} color={'black'}>
               Key Points:
@@ -205,40 +206,40 @@ function NewsList() {
                 margin: 0,
               }}
             >
-              {news.sentences.map((sentence, sentenceIndex) => (
-                <li
-                  key={sentenceIndex}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: 8,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 7,
-                      height: 8,
-                      borderRadius: '50%',
-                      bgcolor: sentimentColors[news.sentiment_list[sentenceIndex]],
-                      mr: 2,
-                    }}
-                  />
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      bgcolor:
-                        sentimentColors[news.sentiment_list[sentenceIndex]],
-                      color: 'white',
-                      px: 1,
-                      py: 0.5,
-                      borderRadius: 1,
-                      fontSize: 18
+              {news.sentences &&
+                news.sentences.map((sentence, sentenceIndex) => (
+                  <li
+                    key={sentenceIndex}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: 8,
                     }}
                   >
-                    {sentence}
-                  </Typography>
-                </li>
-              ))}
+                    <Box
+                      sx={{
+                        width: 7,
+                        height: 8,
+                        borderRadius: '50%',
+                        bgcolor: sentimentColors[news.sentiment_list ? news.sentiment_list[sentenceIndex] : 0],
+                        mr: 2,
+                      }}
+                    />
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        bgcolor: sentimentColors[news.sentiment_list ? news.sentiment_list[sentenceIndex] : 0],
+                        color: 'white',
+                        px: 1,
+                        py: 0.5,
+                        borderRadius: 1,
+                        fontSize: 18,
+                      }}
+                    >
+                      {sentence}
+                    </Typography>
+                  </li>
+                ))}
             </ul>
           </CardContent>
         </Card>
@@ -246,7 +247,5 @@ function NewsList() {
     </Box>
   );
 }
-// NewsList.propTypes = {
-//   onCategoryNamesChange: PropTypes.func.isRequired,
-// };
+
 export default NewsList;
