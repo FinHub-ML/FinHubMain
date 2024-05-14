@@ -1,6 +1,8 @@
-# FinHub
+# FinHub Application Demo
 
 FinHub is a financial web application that provides news, analysis, and tools for investors and traders. It offers features such as news aggregation, financial data visualization, and AI-powered insights.
+
+Note: This is only a demo, only deployment can realize its intended potential. We apologize for the performance and other issues,because of not being deployed yet, the computations are all on the client side. With future deployment, the computations will be done on the server side and the issues and perforamnce will be fixed.
 
 ## Home Page
 
@@ -69,3 +71,5 @@ python app.py
 
 1. `npm install`
 2. `npm start`
+3. navigate to Top News Page (to fetch and compute the news) and then you can proceed to home page. (Apologies for the extra time: because of not being deployed yet, the computations are all on the client side. With future deployment, the computations will be done on the server side and the issues and perforamnce will be fixed.) 
+
