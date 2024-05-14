@@ -38,6 +38,7 @@ function NewsList() {
     if (storedNews) {
       setNewsList(storedNews);
     } else {
+      console.log("Fetching news")
       fetchNews();
     }
   }, []);
@@ -46,6 +47,7 @@ function NewsList() {
     const storedNews = JSON.parse(localStorage.getItem('newsList'));
     if (storedNews) {
       setNewsList(storedNews);
+      console.log("Already have stored news")
     } else {
       setIsLoading(true);
       setError(null);
@@ -56,6 +58,7 @@ function NewsList() {
           throw new Error('Failed to fetch news data');
         }
         const data = await response.json();
+        console.log(data);
         setNewsList(data);
         localStorage.setItem('newsList', JSON.stringify(data));
         // onCategoryNamesChange(getUniqueCategoryNames(data));
@@ -66,7 +69,10 @@ function NewsList() {
       }
     }
     };
-
+  const handleRefreshClick = async () => {
+    localStorage.removeItem('newsList');
+    fetchNews();
+  }
   
 
   const handleTitleClick = (url) => {
@@ -107,7 +113,7 @@ function NewsList() {
             <Button
               
               color="primary"
-              onClick={fetchNews}
+              onClick={handleRefreshClick}
               disabled={isLoading}
               sx = {{height: 40, width: 40, borderRadius: 20, padding: 0, margin:0 }}
             >
