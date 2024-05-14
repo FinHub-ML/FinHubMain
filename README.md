@@ -18,8 +18,8 @@ NEWS_API_KEY = paste-my-key-here
 #### Windows
 - download from https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
 - move the ffmpeg.exe and ffprobe.exe to backend/whisper_client/ffmpeg/
-#### Mac (TBD)
-
+#### Mac (Please contact if problem, not tested since no MAC machine)
+- brew install ffmpeg
 ### 4. Download our finetuned BERT model
 - https://drive.google.com/drive/folders/1f73MSmtG9qHJW4UkEI_FxGBl9dYQqUye?usp=drive_link
 
