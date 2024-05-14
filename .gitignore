@@ -6,3 +6,6 @@ ffprobe.exe
 
 /downloads
 /images/*
+backend/bart/__pycache__/bart.cpython-39.pyc
+backend/whisper_client/__pycache__/link_to_audio.cpython-39.pyc
+backend/whisper_client/__pycache__/whisper.cpython-39.pyc
