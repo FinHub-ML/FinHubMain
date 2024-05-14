@@ -2,7 +2,14 @@ from eventregistry import *
 import csv
 # how many pieces to read, tobe modified
 MAX_RESULTS = 5
-er = EventRegistry(apiKey = "2f1f8488-4167-4002-a914-03c30828fb5d")
+
+import os 
+from dotenv import load_dotenv
+
+# Load the environment variables
+load_dotenv()
+APIKEY = os.environ.get("NEWS_API_KEY")
+er = EventRegistry(apiKey = APIKEY)
 iter = QueryArticlesIter(
     # queries, tobe modified
     keywords = QueryItems.OR(["Finance", "Stock", "US", "Market", "Economy"]),

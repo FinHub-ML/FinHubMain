@@ -125,13 +125,13 @@ const TooLazy = () => {
   return (
     <div>
       <main>
-        <h2>TOO LAZY TO VIEW THE ARTICLE OR VIDEO?</h2>
+        <h2>TOO LAZY TO VIEW THE VIDEO?</h2>
         <h2>GIVE US THE LINK.</h2>
         <div className="link-input-container">
           <input
             type="text"
             className="link-input common-text-style"
-            placeholder="Enter Youtube/article URL here..."
+            placeholder="Enter Youtube URL here..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
