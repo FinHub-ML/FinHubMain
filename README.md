@@ -28,7 +28,3 @@ NEWS_API_KEY = paste-my-key-here
 ### 4. Download our finetuned BERT model
 - https://drive.google.com/drive/folders/1f73MSmtG9qHJW4UkEI_FxGBl9dYQqUye?usp=drive_link
 
-# Docs
-- Planning page: https://docs.google.com/document/d/1Z7vSNdYFWoE4q9VNosy1tkRNSG_z8pdKKVhqWxOz6K0/edit
-- Sample output page: https://docs.google.com/document/d/1gipkOAjggENA84eLiepr1C2xSv_gs1408usCCPYQ7HA/edit?usp=sharing
-
